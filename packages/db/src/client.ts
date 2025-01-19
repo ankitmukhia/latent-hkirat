@@ -1,9 +1,7 @@
-// singleton connection
+// singleton connection 
 import { PrismaClient } from '@prisma/client'
 
-const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
+const db = new PrismaClient()
 
-export const db =
-  globalForPrisma.prisma || new PrismaClient()
+export { db }
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db

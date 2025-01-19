@@ -1,7 +1,8 @@
 import { Request, Response } from 'express'
 import { authPhoneNumberSchema, verifySchema } from '@repo/common/types'
-import { generateToken, verifyToken } from 'authenticator'
+import { generateToken, verifyToken, generateKey } from 'authenticator'
 import { signeature } from '../config'
+import { sendMessage } from '../config/twilio'
 import jwt from 'jsonwebtoken'
 import { db }  from '@repo/db'
 
@@ -16,19 +17,17 @@ export const userController = {
 			})
 			return
 		}
-		console.log(data.number)
 
-		const otp = generateToken(data.number.toString())
+		const otp = generateToken(data.number)
 		const user = await db.user.upsert({
 			create: {
-				number
+				number: data.number
 			},
 			update: {},
 			where: {
-				number
+				number: data.number
 			}
 		})
-
 		if(!user) {
 			res.status(500).json({
 				error: "Failed to create user."
@@ -36,14 +35,22 @@ export const userController = {
 			return
 		}
 
+		//? send message/otp to the user number
+		try{
+			await sendMessage(`Your otp for logging into latent is ${otp}`, data.number)
+		}catch(err) {
+			console.log(err)
+			new Error("Something went wrong.")
+			return 
+		}
 
 		res.status(201).json({
 			id: user.id
 		})
 	},
 	async signupVerify(req: Request, res: Response) {
-		const { number, name, otp } = req.body	
-		const { data, success } = verifySchema.safeParse({ number, name, opt })
+		const { number, name, otp } = req.body
+		const { data, success } = verifySchema.safeParse({ number, name, otp })
 		
 		if(!success) {
 			res.status(400).json({
@@ -52,21 +59,24 @@ export const userController = {
 			})
 			return
 		}
+
+		const formattedKey = generateKey()
+		console.log(verifyToken(formattedKey, "685957"))
 			
-		if(!verifyToken(number + "SIGNUP", otp.toString())) {
+		/* if(!verifyToken(formattedKey, otp)) {
 			res.status(400).json({
 				error: "Invalid token",
 				message: "Failed to verify"
 			})
 			return
-		}
+		} */
 
-		const user = await db.user.update({
+		/* const user = await db.user.update({
 			where: {
-				number
+				number: data.number
 			},
 			data: {
-				name,
+				name: data.name,
 				verified: true
 			}
 		})	
@@ -81,10 +91,10 @@ export const userController = {
 			userId: user.id		
 		}
 		// make it more secure by introduding, expire/refrech tokens etc.
-		const token = jwt.sign(payload, signeature)
+		const token = jwt.sign(payload, signeature) */
 
 		res.status(200).json({
-			token
+			token: "LaLa"
 		})
 
 	},
