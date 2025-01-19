@@ -4,20 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-	"build": "tsc -b",
-	"start": "tsc -b && node dist/index.js"
+    "build": "tsc -b",
+    "start": "tsc -b && node dist/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/authenticator": "^1.1.4",
+    "authenticator": "^1.1.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2"
   },
   "devDependencies": {
     "@repo/common": "workspace:*",
     "@repo/db": "workspace:*",
-    "@types/express": "^5.0.0",
-    "@repo/typescript-config": "workspace:*"
+    "@repo/typescript-config": "workspace:*",
+    "@types/express": "^5.0.0"
   }
 }

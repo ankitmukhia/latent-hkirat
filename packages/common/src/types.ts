@@ -1,7 +1,7 @@
 import z from "zod";
 
 export const authPhoneNumberSchema = z.object({
-  number: z.number().min(9).max(13)
+  number: z.number()
 });
 
 export const verifySchema = z.object({

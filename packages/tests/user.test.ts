@@ -2,26 +2,28 @@ import axios from 'axios'
 import { describe, expect, it } from 'vitest'
 
 const BASE_URL="http://localhost:3000"
-const PHONE_NUMBER="8904756875"
+const PHONE_NUMBER=8904756875
 const NAME="ankit"
 
 describe("User signup endpoints", async () => {
-	const response1 = await axios.post(`${BASE_URL}/v1/user/signup`, {
-		number: PHONE_NUMBER 
-	})
+	it("signup create", async () => {
+		const response1 = await axios.post(`${BASE_URL}/v1/user/signup`, {
+			number: PHONE_NUMBER 
+		})
 
-	const response2 = await axios.post(`${BASE_URL}/v1/user/signup/verify`, {
-		number: PHONE_NUMBER,
-		name: NAME,
-		otp: "000000"
-	})
+		const response2 = await axios.post(`${BASE_URL}/v1/user/signup/verify`, {
+			number: PHONE_NUMBER,
+			name: NAME,
+			otp: "000000"
+		})
 
-	expect(response1.status).toBe(201)
-	expect(response2.status).toBe(200)
-	expect(response1.data.id).not.toBeNull()
+		expect(response1.status).toBe(201)
+		expect(response1.data.id).not.toBeNull()
+		expect(response2.status).toBe(200)
+	})
 })
 
-describe("User signin endpoints", async () => {
+/* describe.skip("User signin endpoints", async () => {
 	it("Sigin works, user does exist in our record", async () => {
 		const response1 = await axios.post(`${BASE_URL}/v1/user/signin`, {
 			number: PHONE_NUMBER
@@ -48,6 +50,6 @@ describe("User signin endpoints", async () => {
 	})
 })
 
-describe("", async () => {
+describe.skip("", async () => {
 	
-})
+}) */

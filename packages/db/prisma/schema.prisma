@@ -14,6 +14,72 @@ datasource db {
 }
 
 model User {
-    id String @id @default(uuid())
-    name String
+	id 		String @id @default(uuid())
+	number 		String @unique
+	name 	  	String?
+	verified 	Boolean @default(false)
+	booking		Booking[]
+	payment		Payment[]
+}
+
+model Admin{
+	id 		String @id @default(uuid())
+	number 		String @unique
+	name 	  	String?
+	verified 	Boolean @default(false)
+	event		Event[]
+}
+
+model Event {
+	id    		String @id @default(uuid())
+	name  		String?
+	description 	String
+	banner		String
+	adminId		String
+	admin 		Admin @relation(fields: [adminId], references: [id])
+	booking		Booking[]
+	payment		Payment[]
+}
+
+model Booking {
+	id    		String @id @default(uuid())
+	eventId		String
+	bookingId       String
+	event		Event   @relation(fields: [bookingId], references: [id])
+	userId		String
+	user		User	@relation(fields: [userId], references: [id])
+	seats		Seat[]
+}
+
+model Seat {
+	id		String 	@id   @default(uuid())
+	seatTypeId   	String
+	seat		SeatType	@relation(fields: [seatTypeId], references: [id])
+	bookingId	String
+	booking		Booking		@relation(fields: [bookingId], references: [id])
+	qr		String
+}
+
+model SeatType {
+	id		String 	@id   @default(uuid())
+	name 		String
+	description	String
+	event		String
+	price		String
+	seats		Seat[]
+}
+
+model Payment {
+	id		String 	@id   @default(uuid())
+	userId		String
+	user		User		@relation(fields: [userId], references: [id])
+	eventId		String
+	event		Event		@relation(fields: [eventId], references: [id])
+	status		PaymentStatus
+}
+
+enum PaymentStatus {
+	Success
+	Fail
+	Pending
 }
