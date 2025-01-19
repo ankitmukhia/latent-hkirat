@@ -1,6 +1,8 @@
 import { Request, Response } from 'express'
 import { authPhoneNumberSchema, verifySchema } from '@repo/common/types'
 import { generateToken, verifyToken } from 'authenticator'
+import { signeature } from '../config'
+import jwt from 'jsonwebtoken'
 import { db }  from '@repo/db'
 
 export const userController = {
@@ -75,11 +77,14 @@ export const userController = {
 			})
 			return
 		}
-		// 1. JWT // is not the best aproch, bolow are the reason. Tommowow I will do this.
-		//? next tommorow? you should have a expire, have refresh tokens, if your token leaked people can't keep reloggingin
+		const payload = {
+			userId: user.id		
+		}
+		// make it more secure by introduding, expire/refrech tokens etc.
+		const token = jwt.sign(payload, signeature)
 
 		res.status(200).json({
-			token: "token"
+			token
 		})
 
 	},
