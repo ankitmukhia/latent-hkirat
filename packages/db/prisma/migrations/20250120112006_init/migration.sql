@@ -1,22 +1,21 @@
-/*
-  Warnings:
-
-  - A unique constraint covering the columns `[number]` on the table `User` will be added. If there are existing duplicate values, this will fail.
-  - Added the required column `number` to the `User` table without a default value. This is not possible if the table is not empty.
-
-*/
 -- CreateEnum
 CREATE TYPE "PaymentStatus" AS ENUM ('Success', 'Fail', 'Pending');
 
--- AlterTable
-ALTER TABLE "User" ADD COLUMN     "number" TEXT NOT NULL,
-ADD COLUMN     "verified" BOOLEAN NOT NULL DEFAULT false;
+-- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL,
+    "number" TEXT NOT NULL,
+    "name" TEXT,
+    "verified" BOOLEAN NOT NULL DEFAULT false,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "Admin" (
     "id" TEXT NOT NULL,
     "number" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
+    "name" TEXT,
     "verified" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "Admin_pkey" PRIMARY KEY ("id")
@@ -25,7 +24,7 @@ CREATE TABLE "Admin" (
 -- CreateTable
 CREATE TABLE "Event" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
+    "name" TEXT,
     "description" TEXT NOT NULL,
     "banner" TEXT NOT NULL,
     "adminId" TEXT NOT NULL,
@@ -75,10 +74,10 @@ CREATE TABLE "Payment" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Admin_number_key" ON "Admin"("number");
+CREATE UNIQUE INDEX "User_number_key" ON "User"("number");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_number_key" ON "User"("number");
+CREATE UNIQUE INDEX "Admin_number_key" ON "Admin"("number");
 
 -- AddForeignKey
 ALTER TABLE "Event" ADD CONSTRAINT "Event_adminId_fkey" FOREIGN KEY ("adminId") REFERENCES "Admin"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

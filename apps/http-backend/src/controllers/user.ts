@@ -18,36 +18,43 @@ export const userController = {
 			return
 		}
 
-		const user = await db.user.upsert({
-			create: {
-				number: data.number
-			},
-			update: {},
-			where: {
-				number: data.number
-			}
-		})
-		if(!user) {
-			res.status(500).json({
-				error: "Failed to create user."
+		try {
+			const user = await db.user.upsert({
+				create: {
+					number: data.number
+				},
+				update: {},
+				where: {
+					number: data.number
+				}
 			})
-			return
-		}
-
-		if(process.env.ENV === "production") {
-			const otp = generateToken(data.number)
-			try{
-				await sendMessage(`Your otp for logging into latent is ${otp}`, data.number)
-			}catch(err) {
-				console.log(err)
-				new Error("Something went wrong.")
-				return 
+			if(!user) {
+				res.status(500).json({
+					error: "Failed to create user."
+				})
+				return
 			}
-		}
 
-		res.status(201).json({
-			id: user.id
-		})
+			if(process.env.ENV === "production") {
+				const otp = generateToken(data.number)
+				try{
+					await sendMessage(`Your otp for logging into latent is ${otp}`, data.number)
+				}catch(err) {
+					console.log(err)
+					new Error("Something went wrong.")
+					return 
+				}
+			}
+
+			res.status(201).json({
+				id: user.id
+			})
+		}catch(err) {
+			res.status(500).json({
+				error: "Internal server error",
+				message: err || "An unexpected error occurred.",
+			});	
+		}
 	},
 	async signupVerify(req: Request, res: Response) {
 		const { number, name, otp } = req.body
@@ -71,33 +78,39 @@ export const userController = {
 				return
 			}
 		}
+	
+		try{
+			const user = await db.user.update({
+				where: {
+					number: data.number
+				},
+				data: {
+					name: data.name,
+					verified: true
+				}
+			})	
 
-		const user = await db.user.update({
-			where: {
-				number: data.number
-			},
-			data: {
-				name: data.name,
-				verified: true
+			if(!user) {
+				res.status(500).json({
+					error: "Failed to verify"
+				})
+				return
 			}
-		})	
+			const payload = {
+				userId: user.id		
+			}
+			// make it more secure by introduding, expire/refrech tokens etc.
+			const token = jwt.sign(payload, signeature)
 
-		if(!user) {
-			res.status(500).json({
-				error: "Failed to verify"
+			res.status(200).json({
+				token
 			})
-			return
+		}catch(err) {
+			res.status(500).json({
+				error: "Internal server error",
+				message: err || "An unexpected error occurred.",
+			});	
 		}
-		const payload = {
-			userId: user.id		
-		}
-		// make it more secure by introduding, expire/refrech tokens etc.
-		const token = jwt.sign(payload, signeature)
-
-		res.status(200).json({
-			token
-		})
-
 	},
 	async signin(req: Request, res: Response) {
 		const { number } = req.body
@@ -110,35 +123,41 @@ export const userController = {
 			})
 			return
 		}
-		
-		//? db call
-		const user = await db.user.findUnique({
-			where: {
-				number: data.number
-			}
-		})
-		
-		if(!user) {
-			res.status(500).json({
-				error: "Not registred"
+	
+		try {
+			const user = await db.user.findUnique({
+				where: {
+					number: data.number
+				}
 			})
-			return
-		}
 
-		if(process.env.ENV === "production") {
-			const otp = generateToken(data.number)
-			try{
-				await sendMessage(`Your otp for logging into latent is ${otp}`, data.number)
-			}catch(err){
-				console.log(err)
-				new Error("Something went wrong")
+			if(!user) {
+				res.status(500).json({
+					error: "Not registred"
+				})
 				return
 			}
-		}
 
-		res.status(200).json({
-			id: user.id	
-		})
+			if(process.env.ENV === "production") {
+				const otp = generateToken(data.number)
+				try{
+					await sendMessage(`Your otp for logging into latent is ${otp}`, data.number)
+				}catch(err){
+					console.log(err)
+					new Error("Something went wrong")
+					return
+				}
+			}
+
+			res.status(200).json({
+				id: user.id	
+			})
+		}catch(err) {
+			res.status(500).json({
+				error: "Internal server error",
+				message: err || "An unexpected error occurred.",
+			});	
+		}	
 	},
 	async signinVerify(req: Request, res: Response) {
 		const { number, name, otp } = req.body	
@@ -163,31 +182,38 @@ export const userController = {
 			}
 		}
 
-		const user = await db.user.update({
-			where: {
-				number: data.number
-			},
-			data: {
-				name,
-				verified: true
-			}
-		})
-
-		if(!user) {
-			res.status(500).json({
-				error: "Not Registred"
+		try{
+			const user = await db.user.update({
+				where: {
+					number: data.number
+				},
+				data: {
+					name,
+					verified: true
+				}
 			})
-			return
+
+			if(!user) {
+				res.status(500).json({
+					error: "Not Registred"
+				})
+				return
+			}
+
+			const payload = {
+				id: user.id
+			}
+
+			const token = jwt.sign(payload, signeature)
+
+			res.status(200).json({
+				token
+			})
+		}catch(err) {
+			res.status(500).json({
+				error: "Internal server error",
+				message: err || "An unexpected error occurred.",
+			});	
 		}
-
-		const payload = {
-			id: user.id
-		}
-
-		const token = jwt.sign(payload, signeature)
-
-		res.status(200).json({
-			token
-		})
 	}
 }

@@ -36,6 +36,7 @@ model Event {
 	description 	String
 	banner		String
 	adminId		String
+	startDate	DateTime
 	admin 		Admin @relation(fields: [adminId], references: [id])
 	booking		Booking[]
 	payment		Payment[]

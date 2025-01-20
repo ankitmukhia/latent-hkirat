@@ -2,7 +2,7 @@ import axios from 'axios'
 import { describe, expect, it } from 'vitest'
 
 const BASE_URL="http://localhost:3000"
-const PHONE_NUMBER=8904756875
+const PHONE_NUMBER="+918904764954"
 const NAME="ankit"
 
 describe("User signup endpoints", async () => {
@@ -23,7 +23,7 @@ describe("User signup endpoints", async () => {
 	})
 })
 
-/* describe.skip("User signin endpoints", async () => {
+describe("User signin endpoints", async () => {
 	it("Sigin works, user does exist in our record", async () => {
 		const response1 = await axios.post(`${BASE_URL}/v1/user/signin`, {
 			number: PHONE_NUMBER
@@ -42,14 +42,23 @@ describe("User signup endpoints", async () => {
 	})
 
 	it("Sigin doesn't work for user who's records doesn't exist", async () => {
-		const response1 = await axios.post(`${BASE_URL}/v1/user/signin`, {
-			number:  PHONE_NUMBER + "123" 
-		})
-
-		expect(response1.status).toBe(404)
+		 expect(async () => {
+			await axios.post(`${BASE_URL}/v1/user/signin`, {
+				number: PHONE_NUMBER + "123" 
+			})
+		}).rejects.toThrowError()
 	})
 })
 
-describe.skip("", async () => {
-	
-}) */
+describe.skip("Evnet endpoint", async () => {
+	it("Create an event", async () => {
+		const response1 = await axios.post(`${BASE_URL}/v1/user/signin`, {
+			name: "",
+			description: "",
+			banner: "",
+			startDate: "",
+			endDate: "",
+			location: ""
+		})
+	})
+})

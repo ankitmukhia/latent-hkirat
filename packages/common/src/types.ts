@@ -15,3 +15,11 @@ export const verifySigninSchema = z.object({
   number: z.string(),
   otp: z.string(),
 });
+
+export const verifyEventSchema = z.object({
+	name: z.string(),
+	description: z.string(),
+	start_date: z.date(),
+	banner: z.string(),
+	location: z.string()
+})
