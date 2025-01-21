@@ -10,6 +10,11 @@ export const verifySchema = z.object({
   otp: z.string(),
 });
 
+export const verifyAdminSchema = z.object({
+  name: z.string(),
+  number: z.string(),
+});
+
 export const verifySigninSchema = z.object({
   name: z.string(),
   number: z.string(),
