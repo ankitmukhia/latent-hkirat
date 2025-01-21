@@ -201,7 +201,7 @@ export const userController = {
 			}
 
 			const payload = {
-				id: user.id
+				userId: user.id
 			}
 
 			const token = jwt.sign(payload, signeature)
