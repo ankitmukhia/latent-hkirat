@@ -42,8 +42,37 @@ testRouter.post("/create-admin", async (req: Request, res: Response) => {
 	})
 })
 
-testRouter.post("/create-user", (req: Request, res: Response) => {
+testRouter.post("/create-user", async (req: Request, res: Response) => {
+	const { number } = req.body
+	if(typeof number !== "string") {
+		res.status(400).json({
+			error: "Bad Request",
+			message: "Invalid or messing request"
+		})
+		return
+	}
 
+	const user = await db.user.create({
+		data: {
+			number
+		}
+	})
+
+	if(!user) {
+		res.status(500).json({
+			error: "Error creating user"
+		})
+		return
+	}
+	const payload = {
+		userId: user.id
+	}
+
+	const token = jwt.sign(payload, signeature)
+
+	res.status(201).json({
+		token
+	})
 })
 
 export { testRouter }
