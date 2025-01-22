@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { verifyEventSchema, updateEventSchema } from '@repo/common/types'
+import { verifyEventSchema, updateEventSchema, updateSeatSchema } from '@repo/common/types'
 import { db } from '@repo/db'
 
 export const eventController = {
@@ -153,5 +153,83 @@ export const eventController = {
 		res.status(200).json({
 			event
 		})
+	},
+	async updateEventSeat(req: Request, res: Response) {
+		const { name, description, price, capacity } = req.body
+		const { data, success } = updateSeatSchema.safeParse({ name, description, price, capacity }) 
+		const adminId = req.userId
+		const eventId = req.params.eventId
+
+		if(!success) {
+			res.status(400).json({
+				error: "Bad Request",
+				message: "Invalid or missing req body"
+			})
+			return
+		}
+
+		if(!adminId || !eventId) {
+			res.status(400).json({
+				error: "Bad Request",
+				message: "Invalid or missing adminId or eventId"
+			})
+			return
+		}
+
+		const currentSeats = await db.seatType.findMany({
+			where: {
+				eventId 
+			}
+		})
+	
+		const newSeats = data.seats.filter(x => !x.id)
+		// filter the data.seats array to include elements that have an id and match an id in the currentSeats array.
+		const updatedSeats = data.seats.filter(x => x.id && currentSeats.find(y => y.id === x.id))
+		// filter currentseats array to include only elements whos id is not found in the data.seats array
+		const deletedSeats = currentSeats.filter(x => !data.seats.find(y => y.id === x.id))
+
+		try{
+			await db.$transaction([
+				db.seatType.deleteMany({
+					where: {
+						id: {
+							in: deletedSeats.map(x => x.id)
+						}	
+					}
+				}),
+
+				db.seatType.createMany({
+					data: newSeats.map(x => ({
+						name: x.name,
+						description: x.description,
+						price: x.price,
+						capacity: x.capacity,
+						eventId
+					})) 
+				}),
+				...updatedSeats.map(seat => db.seatType.update({
+					where: {
+						id: seat.id
+					},
+					data: {
+						name: seat.name,
+						description: seat.description,
+						price: seat.price,
+						capacity: seat.capacity
+					}
+				}))
+
+			])
+			res.status(200).json({
+				message: "Event seat updated successfully."
+			})
+		}catch(err) {
+			console.log(err)
+			res.status(500).json({
+				error: "Internal server error",
+				message: err || "An unexpected error occurred.",
+			});	
+		}
+
 	}
 }

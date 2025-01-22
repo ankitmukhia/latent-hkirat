@@ -1,10 +1,12 @@
 import { Router } from 'express'
 const eventsRouter: Router = Router()
 import { eventController } from '../../controllers/event'
+import { adminMiddleware } from '../../middlewares/admin'
 
-eventsRouter.post("/", eventController.createEvent)
-eventsRouter.put("/metadata/:eventId", eventController.updateEventMetadata)
-eventsRouter.get("/", eventController.getAllEvents)
-eventsRouter.get("/:eventId", eventController.getEvent)
+eventsRouter.post("/", adminMiddleware, eventController.createEvent)
+eventsRouter.put("/metadata/:eventId", adminMiddleware, eventController.updateEventMetadata)
+eventsRouter.get("/",  adminMiddleware, eventController.getAllEvents)
+eventsRouter.get("/:eventId",  adminMiddleware, eventController.getEvent)
+eventsRouter.put("/:eventId",  adminMiddleware, eventController.updateEventSeat)
 
 export { eventsRouter }

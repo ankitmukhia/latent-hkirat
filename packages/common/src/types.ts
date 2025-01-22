@@ -35,6 +35,16 @@ export const verifyEventSchema = z.object({
 	}))
 })
 
+export const updateSeatSchema = z.object({
+	seats: z.array(z.object({
+		id: z.string().optional(),
+		name: z.string(),
+		description: z.string(),
+		price: z.number(),
+		capacity: z.number()
+	}))
+})
+
 export const updateEventSchema = z.object({
 	name: z.string(),
 	description: z.string(),
