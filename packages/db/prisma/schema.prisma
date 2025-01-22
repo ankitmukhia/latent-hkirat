@@ -25,21 +25,34 @@ model User {
 model Admin{
 	id 		String @id @default(uuid())
 	number 		String @unique
-	name 	  	String?
+	name 	  	String
 	verified 	Boolean @default(false)
 	event		Event[]
 }
 
 model Event {
 	id    		String @id @default(uuid())
-	name  		String?
+	name  		String
 	description 	String
 	banner		String
+	published	Boolean @default(false)
+	ended		Boolean	@default(false)
+	startTime	DateTime
 	adminId		String
-	startDate	DateTime
 	admin 		Admin @relation(fields: [adminId], references: [id])
+	locationId	String
+	location	Location @relation(fields: [locationId], references: [id])
 	booking		Booking[]
 	payment		Payment[]
+	seatTypes	SeatType[]
+}
+
+model Location {
+	id String @id 	@default(uuid())
+	name		String
+	description 	String
+	imageUrl	String
+	evnet		Event[]
 }
 
 model Booking {
@@ -65,9 +78,13 @@ model SeatType {
 	id		String 	@id   @default(uuid())
 	name 		String
 	description	String
-	event		String
-	price		String
+	price		Int
+	capacity	Int
 	seats		Seat[]
+	filled		Int @default(0)
+	locked 		Int @default(0)
+	eventId		String
+	event		Event @relation(fields: [eventId], references: [id])
 }
 
 model Payment {

@@ -24,7 +24,23 @@ export const verifySigninSchema = z.object({
 export const verifyEventSchema = z.object({
 	name: z.string(),
 	description: z.string(),
-	start_date: z.date(),
+	startTime: z.date(),
+	locationId: z.string(),
 	banner: z.string(),
-	location: z.string()
+	seats: z.array(z.object({
+		name: z.string(),
+		description: z.string(),
+		price: z.number(),
+		capacity: z.number()
+	}))
+})
+
+export const updateEventSchema = z.object({
+	name: z.string(),
+	description: z.string(),
+	startTime: z.string(),
+	location: z.string(),
+	banner: z.string(),
+	published: z.boolean(),
+	ended: z.boolean()
 })
