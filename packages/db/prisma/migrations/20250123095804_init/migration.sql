@@ -15,7 +15,7 @@ CREATE TABLE "User" (
 CREATE TABLE "Admin" (
     "id" TEXT NOT NULL,
     "number" TEXT NOT NULL,
-    "name" TEXT,
+    "name" TEXT NOT NULL,
     "verified" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "Admin_pkey" PRIMARY KEY ("id")
@@ -24,12 +24,26 @@ CREATE TABLE "Admin" (
 -- CreateTable
 CREATE TABLE "Event" (
     "id" TEXT NOT NULL,
-    "name" TEXT,
+    "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "banner" TEXT NOT NULL,
+    "published" BOOLEAN NOT NULL DEFAULT false,
+    "ended" BOOLEAN NOT NULL DEFAULT false,
+    "startTime" TIMESTAMP(3) NOT NULL,
     "adminId" TEXT NOT NULL,
+    "locationId" TEXT NOT NULL,
 
     CONSTRAINT "Event_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Location" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "imageUrl" TEXT NOT NULL,
+
+    CONSTRAINT "Location_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -57,8 +71,11 @@ CREATE TABLE "SeatType" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "event" TEXT NOT NULL,
-    "price" TEXT NOT NULL,
+    "price" INTEGER NOT NULL,
+    "capacity" INTEGER NOT NULL,
+    "filled" INTEGER NOT NULL DEFAULT 0,
+    "locked" INTEGER NOT NULL DEFAULT 0,
+    "eventId" TEXT NOT NULL,
 
     CONSTRAINT "SeatType_pkey" PRIMARY KEY ("id")
 );
@@ -83,6 +100,9 @@ CREATE UNIQUE INDEX "Admin_number_key" ON "Admin"("number");
 ALTER TABLE "Event" ADD CONSTRAINT "Event_adminId_fkey" FOREIGN KEY ("adminId") REFERENCES "Admin"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Event" ADD CONSTRAINT "Event_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "Location"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Booking" ADD CONSTRAINT "Booking_bookingId_fkey" FOREIGN KEY ("bookingId") REFERENCES "Event"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -93,6 +113,9 @@ ALTER TABLE "Seat" ADD CONSTRAINT "Seat_seatTypeId_fkey" FOREIGN KEY ("seatTypeI
 
 -- AddForeignKey
 ALTER TABLE "Seat" ADD CONSTRAINT "Seat_bookingId_fkey" FOREIGN KEY ("bookingId") REFERENCES "Booking"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "SeatType" ADD CONSTRAINT "SeatType_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "Event"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Payment" ADD CONSTRAINT "Payment_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

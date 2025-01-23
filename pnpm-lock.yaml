@@ -189,6 +189,9 @@ importers:
 
   packages/tests:
     dependencies:
+      '@repo/common':
+        specifier: workspace:*
+        version: link:../common
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config

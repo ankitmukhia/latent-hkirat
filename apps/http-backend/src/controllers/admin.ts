@@ -59,7 +59,8 @@ export const adminControllers = {
 	},
 	async signinVerify(req: Request, res: Response) {
 		const { number, name, otp } = req.body
-		const {data, success} = verifySigninSchema.safeParse({ number, name, otp })
+		const { data, success} = verifySigninSchema.safeParse({ number, name, otp })
+		console.log("signin verify reached: ", number, name)
 		if(!success){
 			res.status(400).json({
 				error: "Bad Request",

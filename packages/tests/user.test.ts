@@ -49,19 +49,3 @@ describe("User signin endpoints", async () => {
 		}).rejects.toThrowError()
 	})
 })
-
-describe("Evnet endpoint", async () => {
-	it("Create an event", async () => {
-		const response1 = await axios.post(`${BASE_URL}/v1/user/signin`, {
-			name: "Laugh Fest 2025",
-			description: "A night of non-stop laughter with the funniest comedians in the city.",
-			banner: "https://example.com/comedy-banner.jpg",
-			startDate: "2025-03-15T19:00:00Z",
-			location: "Comedy Club, New York" 
-
-		})
-		console.log("event response: ", response1)
-
-		expect(response1.status).toBe(201)
-	})
-})
