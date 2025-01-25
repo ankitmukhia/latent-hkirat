@@ -10,7 +10,7 @@ import { testRouter } from './tests'
 router.use("/user", userRouter)
 router.use("/admin", adminRouter)
 router.use("/profile", profileRouter)
-router.use("/events", eventsRouter)
+router.use("/event", eventsRouter)
 //? next will be specific events
 
 if(process.env.ENV !== "production") {

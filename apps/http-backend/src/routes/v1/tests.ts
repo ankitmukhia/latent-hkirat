@@ -7,7 +7,6 @@ const testRouter: Router = Router()
 
 testRouter.post("/create-admin", async (req: Request, res: Response) => {
 	const { number, name } = req.body
-	console.log("Request reached: from test")
 	const { data, success }  = verifyAdminSchema.safeParse({ name, number })
 
 	if(!success) {

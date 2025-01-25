@@ -4,9 +4,16 @@ import { db } from '@repo/db'
 
 export const eventController = {
 	async createEvent(req: Request, res: Response){
-		const { name, description, location, startTime, banner } = req.body
-		const adminId = req.adminId
-		const { data, success } = verifyEventSchema.safeParse({ name, description, location, startTime, banner })
+		const { name, description, locationId, startTime, banner, seats } = req.body
+		const adminId = req.userId 
+		const { data, success } = verifyEventSchema.safeParse({ 
+			name,
+			description,
+			locationId,
+			banner,
+			startTime,
+			seats
+		})
 		if(!success){
 			res.status(400).json({
 				error: "Bad Request",
@@ -16,14 +23,17 @@ export const eventController = {
 		}
 
 		try{
+			//TODO:
+			//NOTE: Foragain key constrain error
+			console.log("last left here, foragain key constrain error fixing this")
 			const event = await db.event.create({
 				data: {
 					name: data.name,
 					description: data.description,
-					banner: data.banner,
 					startTime: new Date(data.startTime),
+					locationId: data.locationId,
+					banner: data.banner,
 					adminId,
-					locationId:  data.locationId,
 					seatTypes: {
 						create: data.seats.map(seat => ({
 							name: seat.name,
@@ -32,8 +42,9 @@ export const eventController = {
 							capacity: seat.capacity
 						}))
 					}
-				}	
+				}
 			})	
+			console.log("create event: ", event)
 
 			if(!event) {
 				res.status(500).json({
@@ -46,6 +57,7 @@ export const eventController = {
 				eventId: event.id
 			})
 		}catch(err) {
+			console.log(err)
 			res.status(500).json({
 				error: "Internal server error",
 				message: err || "An unexpected error occurred.",

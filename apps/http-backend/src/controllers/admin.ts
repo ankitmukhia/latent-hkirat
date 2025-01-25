@@ -17,7 +17,6 @@ export const adminControllers = {
 			})
 			return
 		}
-		console.log(data.number)
 
 		try{
 			const admin = await db.admin.findUnique({
@@ -27,13 +26,11 @@ export const adminControllers = {
 			})
 
 			if(!admin) {
-				res.status(500).json({
-					error: "Couldn't find admin"
+				res.status(404).json({
+					error: "Admin not registered"
 				})
 				return
 			}
-
-			console.log("admin find: ", admin)
 
 			if(process.env.ENV === "production"){
 				const otp = generateToken(data.number)
@@ -93,12 +90,11 @@ export const adminControllers = {
 			})
 
 			if(!admin) {
-				res.status(500).json({
+				res.status(404).json({
 					error: "Invalid admin"
 				})
 				return
 			}
-			console.log("admin update: ", admin)
 
 			const payload = {
 				adminId: admin.id

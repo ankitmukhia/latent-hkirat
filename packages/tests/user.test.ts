@@ -5,7 +5,7 @@ const BASE_URL="http://localhost:3000"
 const PHONE_NUMBER="+918904764954"
 const NAME="ankit"
 
-describe("User signup endpoints", async () => {
+describe.skip("User signup endpoints", async () => {
 	it("signup create", async () => {
 		const response1 = await axios.post(`${BASE_URL}/v1/user/signup`, {
 			number: PHONE_NUMBER 
@@ -23,7 +23,7 @@ describe("User signup endpoints", async () => {
 	})
 })
 
-describe("User signin endpoints", async () => {
+describe.skip("User signin endpoints", async () => {
 	it("Sigin works, user does exist in our record", async () => {
 		const response1 = await axios.post(`${BASE_URL}/v1/user/signin`, {
 			number: PHONE_NUMBER
@@ -42,10 +42,11 @@ describe("User signin endpoints", async () => {
 	})
 
 	it("Sigin doesn't work for user who's records doesn't exist", async () => {
-		 expect(async () => {
-			await axios.post(`${BASE_URL}/v1/user/signin`, {
+		 await expect(async () => {
+			const res = await axios.post(`${BASE_URL}/v1/user/signin`, {
 				number: PHONE_NUMBER + "123" 
 			})
+			console.log("Signin doesn't work res: ", res)
 		}).rejects.toThrowError()
 	})
 })

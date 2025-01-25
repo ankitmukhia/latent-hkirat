@@ -194,7 +194,7 @@ export const userController = {
 			})
 
 			if(!user) {
-				res.status(500).json({
+				res.status(404).json({
 					error: "Not Registred"
 				})
 				return
