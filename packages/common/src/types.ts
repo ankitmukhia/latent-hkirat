@@ -54,3 +54,8 @@ export const updateEventSchema = z.object({
 	published: z.boolean(),
 	ended: z.boolean()
 })
+export const verifyLocationSchema = z.object({
+	name: z.string(),
+	description: z.string(),
+	imageUrl: z.string(),
+})

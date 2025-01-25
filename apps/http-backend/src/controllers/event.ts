@@ -23,9 +23,6 @@ export const eventController = {
 		}
 
 		try{
-			//TODO:
-			//NOTE: Foragain key constrain error
-			console.log("last left here, foragain key constrain error fixing this")
 			const event = await db.event.create({
 				data: {
 					name: data.name,
@@ -44,7 +41,6 @@ export const eventController = {
 					}
 				}
 			})	
-			console.log("create event: ", event)
 
 			if(!event) {
 				res.status(500).json({
@@ -57,7 +53,6 @@ export const eventController = {
 				eventId: event.id
 			})
 		}catch(err) {
-			console.log(err)
 			res.status(500).json({
 				error: "Internal server error",
 				message: err || "An unexpected error occurred.",

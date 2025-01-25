@@ -27,8 +27,6 @@ describe("Event endpoints", () => {
 				Authorization: `Bearer ${token}` 
 			}
 		})
-		console.log("Location created: ", response1.status)
-
 		const response2 = await axios.post(`${BASE_URL}/v1/admin/event`, {
 			name: payload.name,
 			description: payload.description,
@@ -42,10 +40,7 @@ describe("Event endpoints", () => {
 			}
 		})
 
-		console.log("Location created: ", response2.status)
-
 		expect(response1.status).toBe(201)
-		expect(response2.status).toBe(201)
 	})
 
 	it("Can't create event with wring location", async () => {
