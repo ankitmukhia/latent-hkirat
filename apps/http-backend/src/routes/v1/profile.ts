@@ -1,6 +1,8 @@
 import { Router } from 'express'
 const profileRouter: Router = Router()
 
-profileRouter.post("/")
+import { profileController } from '../../controllers/profile'
+
+profileRouter.post("/", profileController.createProfile)
 
 export { profileRouter }

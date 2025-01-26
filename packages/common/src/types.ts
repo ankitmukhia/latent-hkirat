@@ -49,7 +49,7 @@ export const updateEventSchema = z.object({
 	name: z.string(),
 	description: z.string(),
 	startTime: z.string().datetime(),
-	location: z.string(),
+	locationId: z.string(),
 	banner: z.string(),
 	published: z.boolean(),
 	ended: z.boolean()

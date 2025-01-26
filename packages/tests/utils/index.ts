@@ -44,7 +44,7 @@ export const payload2 = {
 	name: "Gaming Expo 2025",
 	description: "An interactive event showcasing the latest in gaming technology, esports, and VR experiences.",
 	startTime: "2025-07-20T14:00:00Z",
-	location: "gaming_hall_678",
+	locationId: "gaming_hall_678",
 	banner: "https://example.com/images/gaming-expo-banner.jpg",
 	published: true,
 	ended: false

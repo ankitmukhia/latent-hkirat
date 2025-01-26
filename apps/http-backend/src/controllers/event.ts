@@ -60,8 +60,8 @@ export const eventController = {
 		}
 	},
 	async updateEventMetadata(req: Request, res: Response) {
-		const { name, description, startTime, location, banner, published, ended } = req.body 
-		const { data, success } = updateEventSchema.safeParse({ name, description, startTime, location, banner, published, ended })
+		const { name, description, startTime, locationId, banner, published, ended } = req.body 
+		const { data, success } = updateEventSchema.safeParse({ name, description, startTime, locationId, banner, published, ended })
 		const adminId = req.userId
 		const eventId = req.params.eventId
 		if(!success) {
@@ -86,6 +86,7 @@ export const eventController = {
 				return
 			}
 
+
 			await db.event.update({
 				where: {
 					id: eventId
@@ -93,7 +94,7 @@ export const eventController = {
 				data: {
 					name: data.name,
 					description: data.description,
-					locationId: data.location,
+					locationId: data.locationId,
 					banner: data.banner,
 					adminId,
 					published: data.published,
@@ -104,6 +105,7 @@ export const eventController = {
 				id: event.id
 			})
 		}catch(err) {
+			console.log(err)
 			res.status(500).json({
 				error: "Internal server error",
 				message: err  || "An unexpected error occurred"
@@ -162,10 +164,13 @@ export const eventController = {
 		})
 	},
 	async updateEventSeat(req: Request, res: Response) {
-		const { name, description, price, capacity } = req.body
-		const { data, success } = updateSeatSchema.safeParse({ name, description, price, capacity }) 
+		const { seats } = req.body
+		const { data, success, error} = updateSeatSchema.safeParse({ seats }) 
+		console.log("error: ", error)
 		const adminId = req.userId
 		const eventId = req.params.eventId
+		console.log("adminid: ", adminId)
+		console.log("eventId: ", eventId)
 
 		if(!success) {
 			res.status(400).json({
