@@ -145,6 +145,7 @@ export const eventController = {
 	},
 	async getEvent(req: Request, res: Response) {
 		const { eventId } = req.params
+		console.log("got event id: ", eventId)
 
 		const event = await db.event.findUnique({
 			where: {
