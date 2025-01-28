@@ -59,3 +59,11 @@ export const verifyLocationSchema = z.object({
 	description: z.string(),
 	imageUrl: z.string(),
 })
+
+export const createBookingSchema = z.object({
+	eventId: z.string(),
+	seats: z.array(z.object({
+		id: z.string(),
+		qty: z.number()
+	}))
+})

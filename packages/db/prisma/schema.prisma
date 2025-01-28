@@ -63,6 +63,7 @@ model Booking {
 	userId		String
 	user		User	@relation(fields: [userId], references: [id])
 	seats		Seat[]
+	status		BookingStatus
 }
 
 model Seat {
@@ -100,4 +101,10 @@ enum PaymentStatus {
 	Success
 	Fail
 	Pending
+}
+
+enum BookingStatus {
+	Pending
+	Confirmed
+	Timeout
 }
