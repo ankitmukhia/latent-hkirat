@@ -58,8 +58,8 @@ model Location {
 model Booking {
 	id    		String @id @default(uuid())
 	eventId		String
-	bookingId       String
-	event		Event   @relation(fields: [bookingId], references: [id])
+	sequenceNumber	Int
+	event		Event   @relation(fields: [eventId], references: [id])
 	userId		String
 	user		User	@relation(fields: [userId], references: [id])
 	seats		Seat[]

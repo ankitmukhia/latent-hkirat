@@ -23,6 +23,7 @@
   "devDependencies": {
     "@repo/common": "workspace:*",
     "@repo/db": "workspace:*",
+    "@repo/redis": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/express": "^5.0.0"
   }

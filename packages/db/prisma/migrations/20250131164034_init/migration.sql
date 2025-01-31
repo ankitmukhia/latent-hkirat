@@ -1,6 +1,9 @@
 -- CreateEnum
 CREATE TYPE "PaymentStatus" AS ENUM ('Success', 'Fail', 'Pending');
 
+-- CreateEnum
+CREATE TYPE "BookingStatus" AS ENUM ('Pending', 'Confirmed', 'Timeout');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
@@ -52,6 +55,7 @@ CREATE TABLE "Booking" (
     "eventId" TEXT NOT NULL,
     "bookingId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
+    "status" "BookingStatus" NOT NULL,
 
     CONSTRAINT "Booking_pkey" PRIMARY KEY ("id")
 );
