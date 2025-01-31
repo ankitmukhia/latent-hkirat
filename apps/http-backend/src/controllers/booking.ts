@@ -61,7 +61,13 @@ export const userBookingController = {
 					eventId: data.eventId,
 					userId,
 					status: "Pending",
-					sequenceNumber: counter
+					sequenceNumber: counter,
+					seats: {
+						create: data.seats.map(x => ({
+							seatTypeId: x.id,
+							qr: ""
+						}))
+					}
 				}
 			})
 
