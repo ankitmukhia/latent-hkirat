@@ -129,6 +129,12 @@ importers:
         specifier: 5.5.4
         version: 5.5.4
 
+  apps/worker:
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+
   packages/common:
     dependencies:
       zod:
